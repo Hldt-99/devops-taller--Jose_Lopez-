@@ -1,6 +1,11 @@
 pipeline {
     agent any
 
+    tools {
+        jdk 'JDK17'
+        maven 'Maven3'
+    }
+
     environment {
         IMAGE_NAME = 'devops-taller-api'
         IMAGE_TAG = '1.0.0'
