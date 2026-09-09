@@ -17,14 +17,14 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Etapa 9: Compilando la aplicación con Maven en Docker...'
-                sh 'docker run --rm -v "$PWD":/app -w /app maven:3.9.6-eclipse-temurin-17 mvn clean compile'
+                sh 'docker run --rm -v "${WORKSPACE}":/app -w /app maven:3.9.6-eclipse-temurin-17 mvn clean compile'
             }
         }
 
         stage('Test') {
             steps {
                 echo 'Etapa 10: Ejecutando pruebas unitarias de JUnit...'
-                sh 'docker run --rm -v "$PWD":/app -w /app maven:3.9.6-eclipse-temurin-17 mvn test'
+                sh 'docker run --rm -v "${WORKSPACE}":/app -w /app maven:3.9.6-eclipse-temurin-17 mvn test'
             }
         }
 
@@ -32,7 +32,7 @@ pipeline {
             steps {
                 echo 'Etapa 11: Ejecutando análisis de SonarQube...'
                 withSonarQubeEnv('SonarQubeServer') {
-                    sh 'docker run --rm -v "$PWD":/app -w /app --network host maven:3.9.6-eclipse-temurin-17 mvn sonar:sonar -Dsonar.host.url=http://localhost:9000'
+                    sh 'docker run --rm -v "${WORKSPACE}":/app -w /app --network host maven:3.9.6-eclipse-temurin-17 mvn sonar:sonar -Dsonar.host.url=http://localhost:9000'
                 }
             }
         }
