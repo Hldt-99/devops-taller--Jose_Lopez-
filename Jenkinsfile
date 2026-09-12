@@ -32,7 +32,7 @@ pipeline {
             steps {
                 echo 'Etapa 11: Ejecutando análisis de SonarQube...'
                 withSonarQubeEnv('SonarQubeServer') {
-                    sh 'mvn org.sonarsource.scanner.maven:sonar-maven-plugin:sonar'
+                    sh 'mvn org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.host.url=http://sonarqube:9000'
                 }
             }
         }
