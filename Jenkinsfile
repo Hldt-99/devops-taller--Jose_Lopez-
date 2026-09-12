@@ -4,8 +4,8 @@ pipeline {
     environment {
         IMAGE_NAME = 'devops-taller-api'
         IMAGE_TAG = '1.0.0'
-        AWS_REGION = 'us-east-2'           # <-- Reemplaza con tu región de AWS si es diferente
-        AWS_ACCOUNT_ID = '219836849084'     # <-- REEMPLAZA CON TU ID DE CUENTA AWS (12 dígitos)
+        AWS_REGION = 'us-east-2'
+        AWS_ACCOUNT_ID = '<TU_ACCOUNT_ID>'
     }
 
     triggers {
@@ -59,13 +59,8 @@ pipeline {
                     usernameVariable: 'AWS_ACCESS_KEY_ID'
                 )]) {
                     sh """
-                        # Autenticación de Docker contra ECR
                         aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
-
-                        # Etiquetado para ECR
                         docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${IMAGE_NAME}:${IMAGE_TAG}
-
-                        # Subida a ECR
                         docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${IMAGE_NAME}:${IMAGE_TAG}
                     """
                 }
