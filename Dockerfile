@@ -1,9 +1,9 @@
-# Etapa 1: Imagen base ligera de ejecución JRE sobre Alpine
+# Etapa de ejecución ultra-ligera
 FROM eclipse-temurin:17-jre-alpine
 
 WORKDIR /app
 
-# Copiar el archivo JAR generado por el build de Maven
+# Copiar únicamente el archivo JAR empaquetado
 COPY target/*.jar app.jar
 
 EXPOSE 8080
