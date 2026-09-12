@@ -1,10 +1,6 @@
 pipeline {
     agent any
 
-    tools {
-        maven 'Maven3'
-    }
-
     environment {
         IMAGE_NAME = 'devops-taller-api'
         IMAGE_TAG = '1.0.0'
@@ -20,7 +16,7 @@ pipeline {
 
         stage('Build') {
             steps {
-                echo 'Etapa 9: Compilando la aplicación...'
+                echo 'Etapa 9: Compilando la aplicación con Maven...'
                 sh 'mvn clean compile'
             }
         }
