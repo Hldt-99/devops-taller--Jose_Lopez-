@@ -6,7 +6,6 @@ pipeline {
         IMAGE_TAG = '1.0.0'
     }
 
-    // Restricción 1: Ejecución automática por Polling SCM cada 5 minutos
     triggers {
         pollSCM('H/5 * * * *')
     }
@@ -21,12 +20,11 @@ pipeline {
 
         stage('Build') {
             steps {
-                echo 'Etapa 9: Compilando la aplicación con Maven...'
-                sh 'mvn clean compile'
+                echo 'Etapa 9: Compilando y empaquetando el JAR con Maven...'
+                sh 'mvn clean package -DskipTests'
             }
         }
 
-        // Restricción 2: Si Test falla, se detienen las etapas posteriores
         stage('Test') {
             steps {
                 echo 'Etapa 10: Ejecutando pruebas unitarias de JUnit...'
@@ -34,7 +32,6 @@ pipeline {
             }
         }
 
-        // Restricción 2 y 4: Análisis de calidad con SonarQube usando credenciales seguras
         stage('Análisis de calidad') {
             steps {
                 echo 'Etapa 11: Ejecutando análisis de SonarQube con credenciales del sistema...'
@@ -44,7 +41,6 @@ pipeline {
             }
         }
 
-        // Restricción 3: Empaquetado en imagen Docker ligera (Alpine < 300MB)
         stage('Empaquetado') {
             steps {
                 echo 'Etapa 12: Construyendo la imagen Docker ligera...'
@@ -52,7 +48,6 @@ pipeline {
             }
         }
 
-        // Restricción 4: Credenciales de AWS inyectadas mediante el módulo de credenciales de Jenkins
         stage('Despliegue') {
             steps {
                 echo 'Etapa 13: Desplegando en AWS con credenciales seguras de Jenkins...'
