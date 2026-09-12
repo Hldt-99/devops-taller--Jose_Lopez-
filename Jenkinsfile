@@ -5,7 +5,7 @@ pipeline {
         IMAGE_NAME = 'devops-taller-api'
         IMAGE_TAG = '1.0.0'
         AWS_REGION = 'us-east-2'
-        AWS_ACCOUNT_ID = '<TU_ACCOUNT_ID>'
+        AWS_ACCOUNT_ID = '219836849084' // <-- IMPORTANTE: Pon aquí tus 12 dígitos sin comillas extras
     }
 
     triggers {
@@ -59,8 +59,13 @@ pipeline {
                     usernameVariable: 'AWS_ACCESS_KEY_ID'
                 )]) {
                     sh """
-                        aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
+                        # Autenticación mediante el contenedor oficial de AWS CLI
+                        docker run --rm -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} -e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} amazon/aws-cli ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
+
+                        # Etiquetado para ECR
                         docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${IMAGE_NAME}:${IMAGE_TAG}
+
+                        # Subida de la imagen a ECR
                         docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${IMAGE_NAME}:${IMAGE_TAG}
                     """
                 }
